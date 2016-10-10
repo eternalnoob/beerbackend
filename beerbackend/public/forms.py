@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """Public forms."""
 from flask_wtf import Form
-from wtforms import PasswordField, StringField
-from wtforms.validators import DataRequired
+from wtforms import PasswordField, StringField, DecimalField
+from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import ValidationError
 
 from beerbackend.user.models import User
 
@@ -37,3 +38,4 @@ class LoginForm(Form):
             self.username.errors.append('User not activated')
             return False
         return True
+

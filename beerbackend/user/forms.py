@@ -3,6 +3,8 @@
 from flask_wtf import Form
 from wtforms import PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms import DecimalField
+from wtforms.validators import NumberRange, ValidationError
 
 from .models import User
 
@@ -38,3 +40,6 @@ class RegisterForm(Form):
             self.email.errors.append('Email already registered')
             return False
         return True
+
+
+
