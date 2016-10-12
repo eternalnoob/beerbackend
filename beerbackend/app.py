@@ -7,6 +7,8 @@ from beerbackend.assets import assets
 from beerbackend.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate
 from beerbackend.settings import ProdConfig
 
+def truncatenum(number):
+    return '{:02.1f}'.format(number)
 
 def create_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -15,6 +17,7 @@ def create_app(config_object=ProdConfig):
     """
     app = Flask(__name__)
     app.config.from_object(config_object)
+    app.jinja_env.globals.update(truncatenum=truncatenum)
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)

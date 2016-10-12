@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+    <table class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>ABV</th>
+            <th>Hoppiness</th>
+            <th>Bitterness</th>
+            <th>Fruitiness</th>
+        </tr>
+    {% for beer in beers %}
+        <tr>
+            <td>{{beer.beer_name}}</td>
+            <td>{{ truncatenum(beer.abv) }}</td>
+            <td>{{ truncatenum(beer.hoppiness) }}</td>
+            <td>{{ truncatenum(beer.bitterness) }}</td>
+            <td>{{ truncatenum(beer.fruitiness) }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

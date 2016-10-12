@@ -5,6 +5,7 @@ from flask_login import UserMixin
 from beerbackend.database import Column, Model, SurrogatePK, db, reference_col, relationship
 from beerbackend.extensions import bcrypt
 
+
 class Beer(SurrogatePK, Model):
     """It's a beer!"""
 

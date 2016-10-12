@@ -49,10 +49,12 @@ class User(UserMixin, SurrogatePK, Model):
 
     def set_password(self, password):
         """Set password."""
-        self.password = bcrypt.generate_password_hash(password)
+
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, value):
         """Check password."""
+        print(value)
         return bcrypt.check_password_hash(self.password, value)
 
     @property
@@ -63,3 +65,4 @@ class User(UserMixin, SurrogatePK, Model):
     def __repr__(self):
         """Represent instance as a unique string."""
         return '<User({username!r})>'.format(username=self.username)
+
