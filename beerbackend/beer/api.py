@@ -4,7 +4,7 @@ from flask.json import jsonify
 
 
 beer_get_parse = reqparse.RequestParser()
-beer_get_parse.add_argument('name', dest='name',
+beer_get_parse.add_argument('beer_name', dest='beer_name',
                        type=str, required=True,
                        help='The Name of the beer')
 
@@ -28,7 +28,7 @@ PBR = {
 class BeerApi(Resource):
     def get(self):
         args = beer_get_parse.parse_args()
-        name = args.name
+        name = args.beer_name
         beer = Beer.query.filter(Beer.beer_name == name).first()
         print(name)
         print(beer)
@@ -38,9 +38,9 @@ class BeerApi(Resource):
             return None
 
 recommend_get_parse = reqparse.RequestParser()
-recommend_get_parse.add_argument('name', dest='name',
+recommend_get_parse.add_argument('access_token', dest='access_token',
                        type=str, required=True,
-                       help='The Username, won\'t be this in the futu\'re')
+                       help='The access_token of the user you want a recommend')
 
 
 class Recommend(Resource):
