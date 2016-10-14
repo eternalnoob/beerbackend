@@ -58,7 +58,8 @@ def register_blueprints(app):
     return None
 
 def register_api(api):
-    api.add_resource(beer.api.BeerApi, '/api/beer', endpoint='beer')
+    api.add_resource(beer.api.BeerApi, '/api/beer')
+    api.add_resource(beer.api.Recommend, '/api/recommend')
 
 
 def register_errorhandlers(app):
