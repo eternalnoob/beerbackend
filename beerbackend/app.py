@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, render_template
+from flask import Flask, render_template, make_response
+from flask_restful import Api
+from simplejson import dumps
 
 from beerbackend import commands, public, user, beer
 from beerbackend.assets import assets
@@ -16,10 +18,19 @@ def create_app(config_object=ProdConfig):
     :param config_object: The configuration object to use.
     """
     app = Flask(__name__)
+    api = Api(app)
+
+    @api.representation('application/json')
+    def output_json(data, code, headers=None):
+        resp = make_response(dumps(data), code)
+        resp.headers.extend(headers or {})
+        return resp
+
     app.config.from_object(config_object)
     app.jinja_env.globals.update(truncatenum=truncatenum)
     register_extensions(app)
     register_blueprints(app)
+    register_api(api)
     register_errorhandlers(app)
     register_shellcontext(app)
     register_commands(app)
@@ -45,6 +56,9 @@ def register_blueprints(app):
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(beer.views.blueprint)
     return None
+
+def register_api(api):
+    api.add_resource(beer.api.BeerApi, '/api/beer', endpoint='beer')
 
 
 def register_errorhandlers(app):

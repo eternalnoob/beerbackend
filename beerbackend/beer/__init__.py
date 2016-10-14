@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
-"""The user module."""
+"""The beer module."""
 from . import views
+from . import api

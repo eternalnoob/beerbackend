@@ -1,13 +1,13 @@
 """empty message
 
-Revision ID: 8b710ee0f47c
+Revision ID: 666a98defca1
 Revises: None
-Create Date: 2016-10-12 14:28:41.556937
+Create Date: 2016-10-13 22:39:58.829221
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '8b710ee0f47c'
+revision = '666a98defca1'
 down_revision = None
 
 from alembic import op
@@ -20,9 +20,18 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('beer_name', sa.String(length=80), nullable=False),
     sa.Column('abv', sa.Numeric(), nullable=False),
-    sa.Column('hoppiness', sa.Numeric(), nullable=False),
-    sa.Column('bitterness', sa.Numeric(), nullable=False),
-    sa.Column('fruitiness', sa.Numeric(), nullable=False),
+    sa.Column('bitter', sa.Numeric(), nullable=False),
+    sa.Column('color', sa.Numeric(), nullable=False),
+    sa.Column('fruit', sa.Numeric(), nullable=False),
+    sa.Column('hoppy', sa.Numeric(), nullable=False),
+    sa.Column('malty', sa.Numeric(), nullable=False),
+    sa.Column('roasty', sa.Numeric(), nullable=False),
+    sa.Column('smoke', sa.Numeric(), nullable=False),
+    sa.Column('sour', sa.Numeric(), nullable=False),
+    sa.Column('spice', sa.Numeric(), nullable=False),
+    sa.Column('sweet', sa.Numeric(), nullable=False),
+    sa.Column('wood', sa.Numeric(), nullable=False),
+    sa.Column('family', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('beer_name')
