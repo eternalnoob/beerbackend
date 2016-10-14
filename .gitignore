@@ -47,3 +47,5 @@ env/
 
 # development database
 dev.db
+node_modules/
+.idea/

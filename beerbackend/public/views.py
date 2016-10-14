@@ -33,6 +33,10 @@ def home():
             flash_errors(form)
     return render_template('public/home.html', form=form)
 
+@blueprint.route('/index')
+def index():
+    return render_template('public/index.html')
+
 
 @blueprint.route('/logout/')
 @login_required
