@@ -21,3 +21,18 @@ class AuthApi(Resource):
 
         else:
             return None, 401
+
+recommend_get_parse = reqparse.RequestParser()
+recommend_get_parse.add_argument('access_token', dest='access_token',
+                                 type=str, required=True,
+                                 help='The access_token of the user you want a recommend')
+
+
+class UserApi(Resource):
+    def get(self):
+        args = recommend_get_parse.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        if user:
+            #this won't return this in the future, placeholder.
+            return {"username": user.username}
+
