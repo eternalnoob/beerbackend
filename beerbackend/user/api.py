@@ -36,3 +36,30 @@ class UserApi(Resource):
             #this won't return this in the future, placeholder.
             return {"username": user.username}
 
+PBR = {
+    "sour": 1,
+    "malty": 1,
+    "family": "pale-lager",
+    "hoppy": 1,
+    "name": "PBR",
+    "abv": 1,
+    "wood": 1,
+    "bitter": 1,
+    "color": 1,
+    "roasty": 1,
+    "spice": 1,
+    "sweet": 1,
+    "fruit": 1
+}
+
+class UserBeers(Resource):
+    def get(self):
+        args = recommend_get_parse.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        if user:
+            #this won't return this in the future, placeholder.
+            return {"beers": [{"beer": PBR, "rating": 2},
+                              {"beer": PBR, "rating": 3}],
+                    "total": 2,
+                    }
+
