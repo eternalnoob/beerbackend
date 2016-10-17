@@ -60,6 +60,7 @@ def register_blueprints(app):
 def register_api(api):
     api.add_resource(beer.api.BeerApi, '/api/beer')
     api.add_resource(beer.api.Recommend, '/api/recommend')
+    api.add_resource(user.api.AuthApi, '/api/auth')
 
 
 def register_errorhandlers(app):

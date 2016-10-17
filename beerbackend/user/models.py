@@ -3,9 +3,11 @@
 import datetime as dt
 
 from flask_login import UserMixin
-
 from beerbackend.database import Column, Model, SurrogatePK, db, reference_col, relationship
 from beerbackend.extensions import bcrypt
+from itsdangerous import(TimedJSONWebSignatureSerializer as srl,
+                         BadSignature, SignatureExpired)
+import os
 
 
 class Role(SurrogatePK, Model):
@@ -56,6 +58,23 @@ class User(UserMixin, SurrogatePK, Model):
         """Check password."""
         print(value)
         return bcrypt.check_password_hash(self.password, value)
+
+    def generate_auth_token(self, expire_time=None):
+        s = srl(os.environ.get('BEERBACKEND_SECRET',default=None), expires_in=expire_time)
+        return s.dumps({'id': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = srl(os.environ.get('BEERBACKEND_SECRET',default=None))
+        try:
+            data=s.loads(token)
+        except SignatureExpired:
+            return None
+        except BadSignature:
+            return None
+        user = User.query.get(data['id'])
+        return user
+
 
     @property
     def full_name(self):
