@@ -6,8 +6,9 @@ from simplejson import dumps
 
 from beerbackend import commands, public, user, beer
 from beerbackend.assets import assets
-from beerbackend.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate
+from beerbackend.extensions import bcrypt, cache, db, debug_toolbar, login_manager, migrate
 from beerbackend.settings import ProdConfig
+import flask_wtf.csrf
 
 def truncatenum(number):
     return '{:02.1f}'.format(number)
@@ -18,7 +19,8 @@ def create_app(config_object=ProdConfig):
     :param config_object: The configuration object to use.
     """
     app = Flask(__name__)
-    api = Api(app)
+    prot = flask_wtf.csrf.CsrfProtect(app)
+    api = Api(app, decorators=[prot.exempt])
 
     @api.representation('application/json')
     def output_json(data, code, headers=None):
@@ -43,7 +45,7 @@ def register_extensions(app):
     bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
-    csrf_protect.init_app(app)
+    # csrf_protect.init_app(app)
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)

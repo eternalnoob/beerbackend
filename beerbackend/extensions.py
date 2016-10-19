@@ -9,7 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CsrfProtect
 
 bcrypt = Bcrypt()
-csrf_protect = CsrfProtect()
 login_manager = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
