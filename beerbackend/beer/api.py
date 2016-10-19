@@ -38,6 +38,14 @@ class BeerApi(Resource):
         else:
             return None
 
+class BeersApi(Resource):
+    def get(self):
+        beers = Beer.query.all()
+        if beers:
+            return{"beers": [beer.to_data() for beer in beers]}
+        else:
+            return {"beers": []}
+
 recommend_get_parse = reqparse.RequestParser()
 recommend_get_parse.add_argument('access_token', dest='access_token',
                        type=str, required=True,

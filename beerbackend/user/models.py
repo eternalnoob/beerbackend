@@ -40,6 +40,8 @@ class User(UserMixin, SurrogatePK, Model):
     last_name = Column(db.String(30), nullable=True)
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
+    # ratings = db.relationship('Rating', backref='user',
+                              # lazy='dynamic')
 
     def __init__(self, username, email, password=None, **kwargs):
         """Create instance."""

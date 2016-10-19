@@ -42,6 +42,8 @@ class Beer(SurrogatePK, Model):
     wood = Column(db.Numeric, nullable=False, default=1)
     family = Column(db.Integer, nullable=False, default=1)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    # ratings = db.relationship('Rating', backref='beer',
+                              # lazy='dynamic')
 
     def __init__(self, beer_name, abv, bitter, color, fruit,
                  hoppy, malty, roasty, smoke, sour,
