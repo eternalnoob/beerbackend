@@ -18,7 +18,7 @@ def load_user(user_id):
     return User.get_by_id(int(user_id))
 
 
-@blueprint.route('/', methods=['GET', 'POST'])
+@blueprint.route('/landing', methods=['GET', 'POST'])
 def home():
     """Home page."""
     form = LoginForm(request.form)
@@ -33,7 +33,7 @@ def home():
             flash_errors(form)
     return render_template('public/home.html', form=form)
 
-@blueprint.route('/index')
+@blueprint.route('/')
 def index():
     return render_template('public/index.html')
 
