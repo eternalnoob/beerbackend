@@ -58,6 +58,9 @@ gulp.task('copy', function() {
     gulp.src(['../node_modules/jquery/dist/jquery.js', 'node_modules/jquery/dist/jquery.min.js'])
         .pipe(gulp.dest('static/vendor/jquery'))
 
+    gulp.src(['../node_modules/chart.js/dist/Chart.bundle.min.js'])
+        .pipe(gulp.dest('static/js'))
+
     gulp.src(['../node_modules/magnific-popup/dist/*'])
         .pipe(gulp.dest('static/vendor/magnific-popup'))
 
