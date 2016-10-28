@@ -1,9 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-    <H1>{{beer.beer_name}}</H1>
-    <h3>Family: {{ beer.get_family() }}</h3>
     <div class="row">
-        <span class="col-xs-2">Color: {{ truncatenum(beer.color) }}</span>
+        <span class="col-xs-4">Beer: {{beer.beer_name}}</span>
+        <span class="col-xs-4">User: {{user.username}}</span>
+        <span class="col-xs-4">Rating: {{rating.rating}}</span>
+        <span class="col-xs-4">Created At: {{rating.created_at}}</span>
+    </div>
+    <div class="row">
+        <span class="col-xs-2">Beer Color: {{ truncatenum(beer.color) }}</span>
         <div class="col-xs-1" style="height: 20px; width: 20px;
                 background-color: {{ get_color(beer.color) }}; color:{{get_color(beer
         .color) }}"></div>
@@ -55,7 +59,8 @@
                         'rgba(255, 159, 64, 1)'
                     ],
                     borderWidth: 1
-                }]
+                }
+                ]
             },
             options: {
                 scale: {

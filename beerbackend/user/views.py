@@ -13,7 +13,7 @@ blueprint = Blueprint('user', __name__, url_prefix='/users', static_folder='../s
 @login_required
 def members():
     """List members."""
-    return render_template('users/members.html', user=current_user)
+    return render_template('users/members.html', user=current_user, profile=current_user.get_profile())
 
 
 

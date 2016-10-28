@@ -1,7 +1,6 @@
 from beerbackend.beer.models import Beer
 from flask_restful import Resource, Api, reqparse, fields, marshal_with
 from flask.json import jsonify
-from ..user.models import User
 
 
 beer_get_parse = reqparse.RequestParser()
@@ -45,19 +44,3 @@ class BeersApi(Resource):
             return{"beers": [beer.to_data() for beer in beers]}
         else:
             return {"beers": []}
-
-recommend_get_parse = reqparse.RequestParser()
-recommend_get_parse.add_argument('access_token', dest='access_token',
-                       type=str, required=True,
-                       help='The access_token of the user you want a recommend')
-
-
-class Recommend(Resource):
-    def get(self):
-        args = recommend_get_parse.parse_args()
-        user = User.verify_auth_token(args.access_token)
-        if user:
-        #lol for now
-            return PBR
-        else:
-            return None, 401

@@ -19,7 +19,17 @@
                     label: 'Taste Preference',
 
                     //FIXME: POPULATE THIS WITH DATA FROM USER
-                    data: [5,5,5,5,5,7,5,5,5,5],
+                    data: [
+                        {{ profile['sour'] }},
+                        {{ profile['malty'] }},
+                        {{ profile['hoppy'] }},
+                        {{ profile['wood'] }},
+                        {{ profile['bitter'] }},
+                        {{ profile['roasty'] }},
+                        {{ profile['spice'] }},
+                        {{ profile['sweet'] }},
+                        {{ profile['fruit'] }},
+                        ],
 
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',

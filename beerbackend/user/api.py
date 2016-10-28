@@ -1,5 +1,7 @@
-from beerbackend.user.models import User
+from beerbackend.user.models import User, Rating
+from beerbackend.beer.models import Beer
 from flask_restful import Resource, reqparse
+
 
 
 auth_parse = reqparse.RequestParser()
@@ -34,7 +36,9 @@ class UserApi(Resource):
         user = User.verify_auth_token(args.access_token)
         if user:
             #this won't return this in the future, placeholder.
-            return {"username": user.username}
+            return {"username": user.username,
+                    "taste_profile": user.get_profile(),
+                    "ratings": [{"beer_id": rating.beer_id, "rating": rating.rating} for rating in user.ratings]}
     def post(self):
         create_user_parse = reqparse.RequestParser()
         create_user_parse.add_argument('username', dest='username',
@@ -66,7 +70,7 @@ class UserApi(Resource):
         else:
             valid_user = User.create(username=args.username, password=args.password,
                                      email=args.email, active=True)
-            return {"message": "User {} created successfully".format(args.username)}
+            return {"message": "User {} created successfully".format(args.username)}, 201
 
 PBR = {
     "sour": 1,
@@ -81,7 +85,8 @@ PBR = {
     "roasty": 1,
     "spice": 1,
     "sweet": 1,
-    "fruit": 1
+    "fruit": 1,
+    "id": 1
 }
 
 class UserBeers(Resource):
@@ -95,3 +100,65 @@ class UserBeers(Resource):
                     "total": 2,
                     }
 
+class Recommend(Resource):
+    def get(self):
+        args = recommend_get_parse.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        if user:
+            #lol for now
+            return PBR
+        else:
+            return None, 401
+
+rate_get_parser = reqparse.RequestParser()
+rate_get_parser.add_argument('id', dest='id',
+                             type=str, required=True,
+                             help='The ID of the rating')
+
+rate_post_parser = reqparse.RequestParser()
+rate_post_parser.add_argument('beer_id', dest='beer_id',
+                              type=str, required=True,
+                              help='The ID of the beer you are rating')
+
+rate_post_parser.add_argument('access_token', dest='access_token',
+                              type=str, required=True,
+                              help='Access token of user rating the beer')
+rate_post_parser.add_argument('rating', dest='rating',
+                              type=int, required=True,
+                              help='Rating the user gave the beer')
+class RateApi(Resource):
+    def get(self):
+        args = rate_get_parser.parse_args()
+        id = args.id
+        rating = Rating.query.filter(Rating.id == id).first()
+        if rating:
+            user = User.query.filter(User.id == rating.user_id).first()
+            beer = Beer.query.filter(Beer.id == rating.beer_id).first()
+            return {
+                "rating": rating.rating,
+                "user": user.username,
+                "beer": beer.to_data()
+            }
+        else:
+            return None, 404
+    def post(self):
+        args = rate_post_parser.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        rating_val = args.rating
+        beer_id = args.beer_id
+        if user:
+            rating = Rating.query.filter(Rating.user_id == user.id, Rating.beer_id == beer_id).first()
+            if rating:
+                rating = rating.update(beer_id=beer_id, user_id=user.id, rating=rating_val)
+            else:
+                rating = Rating.create(beer_id=beer_id, user_id=user.id, rating=rating_val)
+            return rating.id, 201
+        else:
+            return None, 401
+
+
+
+recommend_get_parse = reqparse.RequestParser()
+recommend_get_parse.add_argument('access_token', dest='access_token',
+                                 type=str, required=True,
+                                 help='The access_token of the user you want a recommend')

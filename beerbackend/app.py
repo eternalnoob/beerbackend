@@ -62,10 +62,11 @@ def register_blueprints(app):
 def register_api(api):
     api.add_resource(beer.api.BeerApi, '/api/beer')
     api.add_resource(beer.api.BeersApi, '/api/beer/all')
-    api.add_resource(beer.api.Recommend, '/api/recommend')
+    api.add_resource(user.api.Recommend, '/api/recommend')
     api.add_resource(user.api.AuthApi, '/api/auth')
     api.add_resource(user.api.UserApi, '/api/user')
     api.add_resource(user.api.UserBeers, '/api/user/beers')
+    api.add_resource(user.api.RateApi, '/api/rate')
 
 
 def register_errorhandlers(app):

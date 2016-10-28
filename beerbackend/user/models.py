@@ -7,6 +7,7 @@ from beerbackend.database import Column, Model, SurrogatePK, db, reference_col, 
 from beerbackend.extensions import bcrypt
 from itsdangerous import(TimedJSONWebSignatureSerializer as srl,
                          BadSignature, SignatureExpired)
+from beerbackend.beer.models import Beer
 import os
 
 
@@ -40,8 +41,8 @@ class User(UserMixin, SurrogatePK, Model):
     last_name = Column(db.String(30), nullable=True)
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
-    # ratings = db.relationship('Rating', backref='user',
-                              # lazy='dynamic')
+    ratings = db.relationship('Rating', backref='user',
+                             lazy='dynamic')
 
     def __init__(self, username, email, password=None, **kwargs):
         """Create instance."""
@@ -77,6 +78,47 @@ class User(UserMixin, SurrogatePK, Model):
         user = User.query.get(data['id'])
         return user
 
+    def get_profile(self):
+        beer_ids = [rating.beer_id for rating in self.ratings]
+        beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
+        print(beers)
+        print
+        print(beer_ids)
+        beers_dict = {beer.id: {"data": beer.to_data()} for beer in beers}
+        for rating in self.ratings:
+            beers_dict[rating.beer_id]["rating"] = rating.rating
+        print(beers_dict)
+        PBR = {
+            "sour": 0,
+            "malty": 0,
+            #"family": "pale-lager",
+            "hoppy": 0,
+            #"abv": 0,
+            "wood": 0,
+            "bitter": 0,
+            "color": 0,
+            "roasty": 0,
+            "spice": 0,
+            "sweet": 0,
+            "fruit": 0,
+            #"id": 0
+        }
+        vals_arr = list(PBR.keys())
+        total_weight = 0
+        for beer in beers_dict.values():
+            rating_offset = 3 - beer['rating']
+            total_weight += abs(rating_offset)
+            for key in vals_arr:
+                print(key)
+                print(beer['data'][key])
+                taste_weight = rating_offset*(beer['data'][key]-5)
+                PBR[key] += taste_weight
+
+        final_map = {key: 5-(val/total_weight) for key, val in PBR.items()}
+        return final_map
+
+
+
 
     @property
     def full_name(self):
@@ -87,3 +129,21 @@ class User(UserMixin, SurrogatePK, Model):
         """Represent instance as a unique string."""
         return '<User({username!r})>'.format(username=self.username)
 
+
+class Rating(SurrogatePK, Model):
+    """It's a beer!"""
+
+    rating = Column(db.Integer, nullable=False, default=3)
+    user_id = Column(db.Integer, db.ForeignKey('users.id'))
+    beer_id = Column(db.Integer, db.ForeignKey('beers.id'))
+    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    __table_args__ = (db.UniqueConstraint("user_id", "beer_id"),)
+
+    def __init__(self, rating, user_id, beer_id ):
+        db.Model.__init__(self, rating=rating, user_id=user_id, beer_id=beer_id)
+
+    def __repr__(self):
+        """What makes a beer a beer, I say?"""
+        return '<Rating({rating!r}, {beer!r} {user!r})>'.format(rating=self.rating,
+                                                                beer=self.beer_id,
+                                                                user=self.user_id)
