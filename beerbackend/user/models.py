@@ -80,41 +80,58 @@ class User(UserMixin, SurrogatePK, Model):
 
     def get_profile(self):
         beer_ids = [rating.beer_id for rating in self.ratings]
-        beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
-        print(beers)
-        print
-        print(beer_ids)
-        beers_dict = {beer.id: {"data": beer.to_data()} for beer in beers}
-        for rating in self.ratings:
-            beers_dict[rating.beer_id]["rating"] = rating.rating
-        print(beers_dict)
-        PBR = {
-            "sour": 0,
-            "malty": 0,
-            #"family": "pale-lager",
-            "hoppy": 0,
-            #"abv": 0,
-            "wood": 0,
-            "bitter": 0,
-            "color": 0,
-            "roasty": 0,
-            "spice": 0,
-            "sweet": 0,
-            "fruit": 0,
-            #"id": 0
-        }
-        vals_arr = list(PBR.keys())
-        total_weight = 0
-        for beer in beers_dict.values():
-            rating_offset = 3 - beer['rating']
-            total_weight += abs(rating_offset)
-            for key in vals_arr:
-                print(key)
-                print(beer['data'][key])
-                taste_weight = rating_offset*(beer['data'][key]-5)
-                PBR[key] += taste_weight
+        if beer_ids:
+            beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
+            print(beers)
+            print
+            print(beer_ids)
+            beers_dict = {beer.id: {"data": beer.to_data()} for beer in beers}
+            for rating in self.ratings:
+                beers_dict[rating.beer_id]["rating"] = rating.rating
+            print(beers_dict)
+            PBR = {
+                "sour": 0,
+                "malty": 0,
+                #"family": "pale-lager",
+                "hoppy": 0,
+                #"abv": 0,
+                "wood": 0,
+                "bitter": 0,
+                "color": 0,
+                "roasty": 0,
+                "spice": 0,
+                "sweet": 0,
+                "fruit": 0,
+                #"id": 0
+            }
+            vals_arr = list(PBR.keys())
+            total_weight = 0
+            for beer in beers_dict.values():
+                rating_offset = 3 - beer['rating']
+                total_weight += abs(rating_offset)
+                for key in vals_arr:
+                    print(key)
+                    print(beer['data'][key])
+                    taste_weight = rating_offset*(beer['data'][key]-5)
+                    PBR[key] += taste_weight
 
-        final_map = {key: 5-(val/total_weight) for key, val in PBR.items()}
+            final_map = {key: 5-(val/total_weight) for key, val in PBR.items()}
+        else:
+            final_map = {
+                "sour": 5,
+                "malty": 5,
+                #"family": "pale-lager",
+                "hoppy": 5,
+                #"abv": 5,
+                "wood": 5,
+                "bitter": 5,
+                "color": 5,
+                "roasty": 5,
+                "spice": 5,
+                "sweet": 5,
+                "fruit": 5,
+                #"id": 5
+            }
         return final_map
 
 

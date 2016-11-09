@@ -47,11 +47,11 @@ class Beer(SurrogatePK, Model):
 
     def __init__(self, beer_name, abv, bitter, color, fruit,
                  hoppy, malty, roasty, smoke, sour,
-                 spice, sweet, wood, **kwargs):
+                 spice, sweet, wood, family, **kwargs):
         db.Model.__init__(self, beer_name=beer_name, abv=abv, bitter=bitter, color=color,
                           fruit=fruit, hoppy=hoppy, malty=malty, roasty=roasty,
                           smoke=smoke, sour=sour, spice=spice, sweet=sweet,
-                          wood=wood, **kwargs)
+                          wood=wood, family=family, **kwargs)
 
     def __repr__(self):
         """What makes a beer a beer, I say?"""

@@ -1,6 +1,7 @@
-from beerbackend.beer.models import Beer
+from beerbackend.beer.models import Beer, families
 from flask_restful import Resource, Api, reqparse, fields, marshal_with
 from flask.json import jsonify
+import json
 
 
 beer_get_parse = reqparse.RequestParser()
@@ -44,3 +45,19 @@ class BeersApi(Resource):
             return{"beers": [beer.to_data() for beer in beers]}
         else:
             return {"beers": []}
+
+    def put(self):
+        with open('beers.json','w') as fin:
+            beers = json.load(fin)
+        for beer in beers["beers"]:
+            family = None
+            if beer.get("family") in families.values():
+                family = families.values().index(beer.get("family")) + 1
+            else:
+                family = 1 #default to 1 if not a family we know
+            Beer.create(beer_name=beer["name"], abv=beer["abv"], bitter=beer["bitter"],
+                 color=beer["color"], fruit=beer["fruit"], hoppy=beer["hoppy"],
+                 malt=beer["malty"],  roasty=beer["roasty"], sweet=beer["sweet"],
+                 spice=beer["spice"], wood=beer["wood"], family=family)
+
+
