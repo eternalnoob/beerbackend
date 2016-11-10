@@ -3,6 +3,20 @@ from beerbackend.beer.models import Beer
 from flask_restful import Resource, reqparse
 
 
+def make_beers_arr(ratings):
+    print("huh")
+    ratings_arr=[]
+    beer_ids = [rating.beer_id for rating in ratings]
+    ratings = [rating.rating for rating in ratings]
+    beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
+    for rating, beer in zip(ratings,beers):
+        data = beer.to_data()
+        beerdict = {"beer": data,
+                    "rating": rating}
+        ratings_arr.append(beerdict)
+
+    return {"beers": ratings_arr,
+            "total": len(ratings_arr)}
 
 auth_parse = reqparse.RequestParser()
 auth_parse.add_argument('username', dest='username',
@@ -35,10 +49,10 @@ class UserApi(Resource):
         args = recommend_get_parse.parse_args()
         user = User.verify_auth_token(args.access_token)
         if user:
-            #this won't return this in the future, placeholder.
             return {"username": user.username,
                     "taste_profile": user.get_profile(),
-                    "ratings": [{"beer_id": rating.beer_id, "rating": rating.rating} for rating in user.ratings]}
+                    "initial_profile": user.get_taste_profile(),
+                    "ratings": make_beers_arr(user.ratings)}
     def post(self):
         create_user_parse = reqparse.RequestParser()
         create_user_parse.add_argument('username', dest='username',
@@ -70,7 +84,7 @@ class UserApi(Resource):
         else:
             valid_user = User.create(username=args.username, password=args.password,
                                      email=args.email, active=True)
-            return {"message": "User {} created successfully".format(args.username)}, 201
+            return {'access_token': valid_user.generate_auth_token()}, 201
 
 PBR = {
     "sour": 1,
@@ -94,11 +108,9 @@ class UserBeers(Resource):
         args = recommend_get_parse.parse_args()
         user = User.verify_auth_token(args.access_token)
         if user:
-            #this won't return this in the future, placeholder.
-            return {"beers": [{"beer": PBR, "rating": 2},
-                              {"beer": PBR, "rating": 3}],
-                    "total": 2,
-                    }
+            return make_beers_arr(user.ratings), 200
+        else:
+            return None, 401
 
 class Recommend(Resource):
     def get(self):
@@ -109,6 +121,65 @@ class Recommend(Resource):
             return PBR
         else:
             return None, 401
+
+
+profile_set_parser = reqparse.RequestParser()
+profile_set_parser.add_argument('access_token', dest='access_token',
+                              type=str, required=True,
+                              help='Access token of user profile')
+profile_set_parser.add_argument('malty', dest='malty',
+                                type=float, required=True,
+                                help='maltiness preference')
+profile_set_parser.add_argument('sour', dest='sour',
+                                type=float, required=True,
+                                help='sourness preference')
+profile_set_parser.add_argument('hoppy', dest='hoppy',
+                                type=float, required=True,
+                                help='hoppiness preference')
+profile_set_parser.add_argument('wood', dest='wood',
+                                type=float, required=True,
+                                help='woodiness preference')
+profile_set_parser.add_argument('bitter', dest='bitter',
+                                type=float, required=True,
+                                help='bitterness preference')
+profile_set_parser.add_argument('roasty', dest='roasty',
+                                type=float, required=True,
+                                help='roastiness preference')
+profile_set_parser.add_argument('spice', dest='spice',
+                                type=float, required=True,
+                                help='spice preference')
+profile_set_parser.add_argument('fruit', dest='fruit',
+                                type=float, required=True,
+                                help='fruit preference')
+profile_set_parser.add_argument('sweet', dest='sweet',
+                                type=float, required=True,
+                                help='fruit preference')
+
+
+class TasteProfile(Resource):
+    def post(self):
+        args = profile_set_parser.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        if user:
+            user.update_taste_profile(malty=args.malty, sour=args.sour, wood=args.wood,
+                                      spice=args.spice, fruit=args.fruit, sweet=args.sweet,
+                                      roasty=args.roasty, bitter=args.bitter)
+            return user.get_taste_profile(), 201
+        else:
+            return None, 400
+    def get(self):
+        profile_get_parser = reqparse.RequestParser()
+        profile_get_parser.add_argument('access_token', dest='access_token',
+                                type=str, required=True,
+                                help='Access token of user profile')
+        args = profile_get_parser.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        if user:
+            return user.get_taste_profile(), 201
+        else:
+            return None, 400
+
+
 
 rate_get_parser = reqparse.RequestParser()
 rate_get_parser.add_argument('id', dest='id',

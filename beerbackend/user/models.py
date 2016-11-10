@@ -9,6 +9,8 @@ from itsdangerous import(TimedJSONWebSignatureSerializer as srl,
                          BadSignature, SignatureExpired)
 from beerbackend.beer.models import Beer
 import os
+import json
+from decimal import Decimal
 
 
 class Role(SurrogatePK, Model):
@@ -41,6 +43,7 @@ class User(UserMixin, SurrogatePK, Model):
     last_name = Column(db.String(30), nullable=True)
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
+    taste_profile=Column(db.Text(), nullable=True)
     ratings = db.relationship('Rating', backref='user',
                              lazy='dynamic')
 
@@ -66,6 +69,21 @@ class User(UserMixin, SurrogatePK, Model):
         s = srl(os.environ.get('BEERBACKEND_SECRET',default=None), expires_in=expire_time)
         return s.dumps({'id': self.id})
 
+    def update_taste_profile(self, malty=5, sour=5, wood=5, hoppy=5, spice=5,
+                             fruit=5, sweet=5, roasty=5, bitter=5):
+        taste={
+            "malty": malty,
+            "sour": sour,
+            "wood": wood,
+            "hoppy": hoppy,
+            "bitter": bitter,
+            "spice": spice,
+            "fruit": fruit,
+            "sweet": sweet,
+            "roasty": roasty,
+        }
+        self.update(taste_profile=json.dumps(taste))
+
     @staticmethod
     def verify_auth_token(token):
         s = srl(os.environ.get('BEERBACKEND_SECRET',default=None))
@@ -79,6 +97,22 @@ class User(UserMixin, SurrogatePK, Model):
         return user
 
     def get_profile(self):
+        taste_profile=None
+        if self.taste_profile:
+            taste_profile=json.loads(self.taste_profile)
+
+        PBR = {
+            "sour": 0,
+            "malty": 0,
+            "hoppy": 0,
+            "wood": 0,
+            "bitter": 0,
+            "roasty": 0,
+            "spice": 0,
+            "sweet": 0,
+            "fruit": 0,
+        }
+        final_map=PBR
         beer_ids = [rating.beer_id for rating in self.ratings]
         if beer_ids:
             beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
@@ -89,21 +123,6 @@ class User(UserMixin, SurrogatePK, Model):
             for rating in self.ratings:
                 beers_dict[rating.beer_id]["rating"] = rating.rating
             print(beers_dict)
-            PBR = {
-                "sour": 0,
-                "malty": 0,
-                #"family": "pale-lager",
-                "hoppy": 0,
-                #"abv": 0,
-                "wood": 0,
-                "bitter": 0,
-                "color": 0,
-                "roasty": 0,
-                "spice": 0,
-                "sweet": 0,
-                "fruit": 0,
-                #"id": 0
-            }
             vals_arr = list(PBR.keys())
             total_weight = 0
             for beer in beers_dict.values():
@@ -115,25 +134,21 @@ class User(UserMixin, SurrogatePK, Model):
                     taste_weight = rating_offset*(beer['data'][key]-5)
                     PBR[key] += taste_weight
 
-            final_map = {key: 5-(val/total_weight) for key, val in PBR.items()}
+            if taste_profile:
+                final_map = {key: ((5-(val/total_weight))+Decimal(taste_profile[key]))/2 for key, val in PBR.items()}
+            else:
+                final_map = {key: 5-(val/total_weight) for key, val in PBR.items()}
         else:
-            final_map = {
-                "sour": 5,
-                "malty": 5,
-                #"family": "pale-lager",
-                "hoppy": 5,
-                #"abv": 5,
-                "wood": 5,
-                "bitter": 5,
-                "color": 5,
-                "roasty": 5,
-                "spice": 5,
-                "sweet": 5,
-                "fruit": 5,
-                #"id": 5
-            }
+            if taste_profile:
+                final_map = taste_profile
+
         return final_map
 
+    def get_taste_profile(self):
+        if self.taste_profile:
+            return json.loads(self.taste_profile)
+        else:
+            return {}
 
 
 

@@ -65,6 +65,7 @@ def register_api(api):
     api.add_resource(user.api.Recommend, '/api/recommend')
     api.add_resource(user.api.AuthApi, '/api/auth')
     api.add_resource(user.api.UserApi, '/api/user')
+    api.add_resource(user.api.TasteProfile, '/api/user/taste')
     api.add_resource(user.api.UserBeers, '/api/user/beers')
     api.add_resource(user.api.RateApi, '/api/rate')
 
