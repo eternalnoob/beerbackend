@@ -50,4 +50,3 @@ dev.db
 node_modules/
 .idea/
 *.env
-beers.json

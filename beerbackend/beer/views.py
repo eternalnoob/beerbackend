@@ -50,7 +50,7 @@ def add():
                         sweet=form.sweet.data, wood=form.wood.data, family=form.family.data)
 
             flash('You added a beer: success')
-            redirect_url = request.args.get('next') or url_for('user.members')
+            redirect_url = request.args.get('next') or url_for('beer.all')
             return redirect(redirect_url)
         else:
             flash_errors(form)
