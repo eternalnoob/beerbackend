@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 from beerbackend.beer.forms import BeerForm
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from beerbackend.utils import flash_errors
-from beerbackend.beer.models import Beer
+from beerbackend.user.models import User, Beer, Rating
+from beerbackend.user.forms import RateForm
 from flask_restful import Resource, Api, reqparse, fields, marshal_with
 
 
@@ -59,10 +60,31 @@ def add():
 
 @blueprint.route('/', methods=['GET'])
 def all():
-    beers = Beer.query.all()
+    beers = Beer.query.allj()
     return render_template('beers/all.html', beers=beers, str=str)
 
-@blueprint.route('/<int:beer_id>', methods=['GET'])
+@blueprint.route('/<int:beer_id>', methods=['GET', 'POST'])
 def getbeer(beer_id):
+    form = RateForm(request.form)
     beer = Beer.query.filter(Beer.id == beer_id).first()
-    return render_template('beers/onebeer.html', beer=beer, get_color=get_color)
+    if current_user.is_authenticated:
+        rating = None
+        if beer_id in [rating.beer_id for rating in current_user.ratings]:
+            rating = next((rating for rating in current_user.ratings if\
+                           rating.beer_id == beer_id), None)
+
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                if rating:
+                    rating.update(rating=form.rating.data)
+                else:
+                    rating = Rating.create(rating=form.rating.data, beer_id=beer_id,
+                                  user_id=current_user.id)
+            else:
+                flash_errors(form)
+
+        return render_template('beers/onebeer.html', beer=beer, get_color=get_color,
+                              user_profile=current_user.get_profile(), rating=rating, form=form)
+    else:
+        return render_template('beers/onebeer.html', beer=beer, get_color=get_color,
+                               user_profile=None, rating=None, form=None)

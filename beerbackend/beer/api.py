@@ -1,4 +1,4 @@
-from beerbackend.beer.models import Beer, families
+from beerbackend.user.models import Beer, families, User
 from flask_restful import Resource, Api, reqparse, fields, marshal_with
 from flask.json import jsonify
 import os

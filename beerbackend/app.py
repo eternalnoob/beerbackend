@@ -4,7 +4,12 @@ from flask import Flask, render_template, make_response
 from flask_restful import Api
 from simplejson import dumps
 
-from beerbackend import commands, public, user, beer
+from beerbackend import commands
+from beerbackend.public.views import blueprint as public_bp
+from beerbackend.beer.views import blueprint as beer_bp
+from beerbackend.user.api import *
+from beerbackend.beer.api import *
+from beerbackend.user.views import blueprint as user_bp
 from beerbackend.assets import assets
 from beerbackend.extensions import bcrypt, cache, db, debug_toolbar, login_manager, migrate
 from beerbackend.settings import ProdConfig
@@ -34,7 +39,7 @@ def create_app(config_object=ProdConfig):
     register_blueprints(app)
     register_api(api)
     register_errorhandlers(app)
-    register_shellcontext(app)
+    # register_shellcontext(app)
     register_commands(app)
     return app
 
@@ -54,20 +59,20 @@ def register_extensions(app):
 
 def register_blueprints(app):
     """Register Flask blueprints."""
-    app.register_blueprint(public.views.blueprint)
-    app.register_blueprint(user.views.blueprint)
-    app.register_blueprint(beer.views.blueprint)
+    app.register_blueprint(public_bp)
+    app.register_blueprint(user_bp)
+    app.register_blueprint(beer_bp)
     return None
 
 def register_api(api):
-    api.add_resource(beer.api.BeerApi, '/api/beer')
-    api.add_resource(beer.api.BeersApi, '/api/beer/all')
-    api.add_resource(user.api.Recommend, '/api/recommend')
-    api.add_resource(user.api.AuthApi, '/api/auth')
-    api.add_resource(user.api.UserApi, '/api/user')
-    api.add_resource(user.api.TasteProfile, '/api/user/taste')
-    api.add_resource(user.api.UserBeers, '/api/user/beers')
-    api.add_resource(user.api.RateApi, '/api/rate')
+    api.add_resource(BeerApi, '/api/beer')
+    api.add_resource(BeersApi, '/api/beer/all')
+    api.add_resource(Recommend, '/api/recommend')
+    api.add_resource(AuthApi, '/api/auth')
+    api.add_resource(UserApi, '/api/user')
+    api.add_resource(TasteProfile, '/api/user/taste')
+    api.add_resource(UserBeers, '/api/user/beers')
+    api.add_resource(RateApi, '/api/rate')
 
 
 def register_errorhandlers(app):
@@ -82,15 +87,15 @@ def register_errorhandlers(app):
     return None
 
 
+"""
 def register_shellcontext(app):
-    """Register shell context objects."""
     def shell_context():
-        """Shell context objects."""
         return {
             'db': db,
             'User': user.models.User}
 
     app.shell_context_processor(shell_context)
+    """
 
 
 def register_commands(app):

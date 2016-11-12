@@ -9,6 +9,26 @@
         .color) }}"></div>
         <span class="col-xs-3">ABV: {{ truncatenum(beer.abv) }}%</span>
     </div>
+    {% if rating %}
+        <div class="row">
+            <span class="col-xs-4">Rated On: {{ rating.created_at }}</span>
+            <div class="col-xs-4">User Rating: {{ rating.rating }}</div>
+
+            {% if form %}
+            <div class="col-xs-6">
+                <form id="ratingForm" class="form form-rating" method="POST" action="" roler="form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div class="form-group">
+                        {{form.rating.label}}
+                        {{form.rating(placeholder="Rate Beer", class_="form-control")}}
+                    </div>
+                    <p><input class="btn btn-default btn-submit" type="submit" value="RateBeer"></p>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
 
     <div id="chart"></div>
     <a href="{{ url_for('beer.all')}}">Back to All Beers</a>
@@ -55,7 +75,32 @@
                         'rgba(255, 159, 64, 1)'
                     ],
                     borderWidth: 1
-                }]
+                }
+                    {% if user_profile %}
+
+                        ,{
+                        label: "User Taste Profile",
+                        backgroundColor: "rgba(179,181,198,0.2)",
+                        borderColor: "rgba(179,181,198,1)",
+                        pointBackgroundColor: "rgba(179,181,198,1)",
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(179,181,198,1)",
+                        data: [
+                            {{ user_profile.sour }},
+                            {{ user_profile.malty }},
+                            {{ user_profile.hoppy }},
+                            {{ user_profile.wood }},
+                            {{ user_profile.bitter }},
+                            {{ user_profile.roasty }},
+                            {{ user_profile.spice }},
+                            {{ user_profile.sweet }},
+                            {{ user_profile.fruit }}
+                        ]
+                    }
+                    {% endif %}
+
+                ]
             },
             options: {
                 scale: {

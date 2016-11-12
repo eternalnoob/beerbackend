@@ -7,7 +7,7 @@ from beerbackend.database import Column, Model, SurrogatePK, db, reference_col, 
 from beerbackend.extensions import bcrypt
 from itsdangerous import(TimedJSONWebSignatureSerializer as srl,
                          BadSignature, SignatureExpired)
-from beerbackend.beer.models import Beer
+from beerbackend.beer.models import Beer, families
 import os
 import json
 from decimal import Decimal

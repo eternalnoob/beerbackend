@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """User forms."""
 from flask_wtf import Form
-from wtforms import PasswordField, StringField
+from wtforms import PasswordField, StringField, IntegerField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from wtforms import DecimalField
 from wtforms.validators import NumberRange, ValidationError
@@ -41,5 +41,7 @@ class RegisterForm(Form):
             return False
         return True
 
+class RateForm(Form):
+    rating = IntegerField('Rating', validators=[DataRequired(), NumberRange(1, 5)])
 
 
