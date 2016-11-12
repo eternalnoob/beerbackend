@@ -5,6 +5,27 @@
     <h3>You can view your beer preferences here</h3>
     <div id="chart"></div>
     <canvas id="myChart"></canvas>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Beer</th>
+                <th>Rating</th>
+                <th>Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for rating in ratings %}
+                <tr>
+                    <td><a href="{{ url_for('beer.all')+str(rating.beer_id) }}">
+                        {{rating.beer.beer_name}}</a></td>
+                    <td>{{ rating.rating }}</td>
+                    <td>{{ rating.created_at }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
 
 {% block js %}
