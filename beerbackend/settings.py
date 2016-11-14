@@ -22,7 +22,7 @@ class ProdConfig(Config):
 
     ENV = 'prod'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']  # TODO: Change me
+    SQLALCHEMY_DATABASE_URI = 'postgres://zezuypakvgobsw:TFYmKZCjJU-oqkLtuvrYYhcU9m@ec2-54-163-238-222.compute-1.amazonaws.com:5432/da7rpnjohro96q'  # TODO: Change me
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
 
 
