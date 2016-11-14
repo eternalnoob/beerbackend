@@ -60,7 +60,7 @@ def add():
 
 @blueprint.route('/', methods=['GET'])
 def all():
-    beers = Beer.query.allj()
+    beers = Beer.query.all()
     return render_template('beers/all.html', beers=beers, str=str)
 
 @blueprint.route('/<int:beer_id>', methods=['GET', 'POST'])
