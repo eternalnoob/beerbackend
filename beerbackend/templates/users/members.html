@@ -35,7 +35,7 @@
             type: 'radar',
             data: {
                 labels: ["Sour", "Malty", "Hoppy", "Woody", "Bitter", "Color",
-                "Roasty", "Spice", "Sweet", "Fruit"],
+                "Roasty", "Spice", "Sweet", "Fruit", "Smoke"],
                 datasets: [{
                     label: 'Taste Preference',
 
@@ -50,6 +50,7 @@
                         {{ profile['spice'] }},
                         {{ profile['sweet'] }},
                         {{ profile['fruit'] }},
+                        {{ profile['smoke'] }},
                         ],
 
                     backgroundColor: [

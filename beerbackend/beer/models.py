@@ -68,6 +68,7 @@ class Beer(SurrogatePK, Model):
             "malty": self.malty,
             "roasty": self.roasty,
             "sour": self.sour,
+            "smoke": self.smoke,
             "spice": self.spice,
             "sweet": self.sweet,
             "wood": self.wood,

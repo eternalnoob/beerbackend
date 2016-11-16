@@ -98,6 +98,7 @@ PBR = {
     "color": 1,
     "roasty": 1,
     "spice": 1,
+    "smoke": 1,
     "sweet": 1,
     "fruit": 1,
     "id": 1
@@ -153,7 +154,10 @@ profile_set_parser.add_argument('fruit', dest='fruit',
                                 help='fruit preference')
 profile_set_parser.add_argument('sweet', dest='sweet',
                                 type=float, required=True,
-                                help='fruit preference')
+                                help='sweet preference')
+profile_set_parser.add_argument('smoke', dest='smoke',
+                                type=float, required=True,
+                                help='smoke preference')
 
 
 class TasteProfile(Resource):
@@ -163,7 +167,7 @@ class TasteProfile(Resource):
         if user:
             user.update_taste_profile(malty=args.malty, sour=args.sour, wood=args.wood,
                                       spice=args.spice, fruit=args.fruit, sweet=args.sweet,
-                                      roasty=args.roasty, bitter=args.bitter)
+                                      roasty=args.roasty, bitter=args.bitter, smoke=args.smoke)
             return user.get_taste_profile(), 201
         else:
             return None, 400

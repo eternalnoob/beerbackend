@@ -70,7 +70,7 @@ class User(UserMixin, SurrogatePK, Model):
         return s.dumps({'id': self.id})
 
     def update_taste_profile(self, malty=5, sour=5, wood=5, hoppy=5, spice=5,
-                             fruit=5, sweet=5, roasty=5, bitter=5):
+                             fruit=5, sweet=5, roasty=5, bitter=5, smoke=5):
         taste={
             "malty": malty,
             "sour": sour,
@@ -79,6 +79,7 @@ class User(UserMixin, SurrogatePK, Model):
             "bitter": bitter,
             "spice": spice,
             "fruit": fruit,
+            "smoke": smoke,
             "sweet": sweet,
             "roasty": roasty,
         }
@@ -111,6 +112,7 @@ class User(UserMixin, SurrogatePK, Model):
             "spice": 0,
             "sweet": 0,
             "fruit": 0,
+            "smoke": 0,
         }
         final_map=PBR
         beer_ids = [rating.beer_id for rating in self.ratings]
