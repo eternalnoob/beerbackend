@@ -113,6 +113,21 @@ class UserBeers(Resource):
         else:
             return None, 401
 
+class LikedBeers(Resource):
+    def get(self):
+        args= recommend_get_parse.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        if user:
+            trimmed_ratings = [x for x in user.ratings if x.rating > 3]
+            sorted_beers = sorted(trimmed_ratings, key=lambda rating: rating.created_at)
+
+            beers = [{"beer": rating.beer.to_data(),"rating": rating.rating} for rating in sorted_beers]
+            return beers
+        else:
+            return None, 401
+
+
+
 class Recommend(Resource):
     def get(self):
         args = recommend_get_parse.parse_args()

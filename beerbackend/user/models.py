@@ -119,7 +119,6 @@ class User(UserMixin, SurrogatePK, Model):
         if beer_ids:
             beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
             print(beers)
-            print
             print(beer_ids)
             beers_dict = {beer.id: {"data": beer.to_data()} for beer in beers}
             for rating in self.ratings:
@@ -137,9 +136,10 @@ class User(UserMixin, SurrogatePK, Model):
                     PBR[key] += taste_weight
 
             if taste_profile:
-                final_map = {key: ((5-(val/total_weight))+Decimal(taste_profile[key]))/2 for key, val in PBR.items()}
+                final_map = {key: Decimal(((5-(val/total_weight))+Decimal(taste_profile[key]))/2).normalize() for key,
+                                                                                                 val in PBR.items()}
             else:
-                final_map = {key: 5-(val/total_weight) for key, val in PBR.items()}
+                final_map = {key: Decimal(5-(val/total_weight)).normalize() for key, val in PBR.items()}
         else:
             if taste_profile:
                 final_map = taste_profile
