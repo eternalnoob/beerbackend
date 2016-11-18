@@ -73,6 +73,7 @@ def register_api(api):
     api.add_resource(TasteProfile, '/api/user/taste')
     api.add_resource(UserBeers, '/api/user/beers')
     api.add_resource(LikedBeers, '/api/user/likedbeers')
+    api.add_resource(DislikedBeers, '/api/user/dislikedbeers')
     api.add_resource(RateApi, '/api/rate')
 
 

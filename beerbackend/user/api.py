@@ -2,6 +2,15 @@ from beerbackend.user.models import User, Rating
 from beerbackend.beer.models import Beer
 from flask_restful import Resource, reqparse
 
+def grab_matching_ratings(user, fn):
+    if user:
+        trimmed_ratings = [x for x in user.ratings if fn(x.rating)]
+        sorted_beers = sorted(trimmed_ratings, key=lambda rating: rating.created_at, reverse=True)
+
+        beers = [{"beer": rating.beer.to_data(),"rating": rating.rating} for rating in sorted_beers]
+        return beers
+    else:
+        return None, 401
 
 def make_beers_arr(ratings):
     print("huh")
@@ -117,15 +126,13 @@ class LikedBeers(Resource):
     def get(self):
         args= recommend_get_parse.parse_args()
         user = User.verify_auth_token(args.access_token)
-        if user:
-            trimmed_ratings = [x for x in user.ratings if x.rating > 3]
-            sorted_beers = sorted(trimmed_ratings, key=lambda rating: rating.created_at)
+        return grab_matching_ratings(user, lambda x: x >= 3)
 
-            beers = [{"beer": rating.beer.to_data(),"rating": rating.rating} for rating in sorted_beers]
-            return beers
-        else:
-            return None, 401
-
+class DislikedBeers(Resource):
+    def get(self):
+        args= recommend_get_parse.parse_args()
+        user = User.verify_auth_token(args.access_token)
+        return grab_matching_ratings(user, lambda x: x < 3)
 
 
 class Recommend(Resource):
