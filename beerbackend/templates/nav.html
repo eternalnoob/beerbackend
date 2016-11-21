@@ -19,8 +19,8 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{ url_for('public.index') }}">Home</a></li>
-      <li><a href="{{ url_for('public.home') }}">Landing</a></li>
+        <li><a href="{{ url_for('public.home') }}">Home</a></li>
+      <li><a href="{{ url_for('public.index') }}">Landing</a></li>
       <li><a href="{{ url_for('public.about') }}">About</a></li>
     </ul>
     {% if current_user and current_user.is_authenticated %}
