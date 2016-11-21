@@ -44,4 +44,24 @@ class RegisterForm(Form):
 class RateForm(Form):
     rating = IntegerField('Rating', validators=[DataRequired(), NumberRange(1, 5)])
 
-
+class QuestionForm(Form):
+    bitter = DecimalField('I enjoy the bitterness of certain foods and drinks like coffee, dark chocolate, grapefruit or kale',
+                          validators=[DataRequired(), NumberRange(0, 10)])
+    fruit = DecimalField('I enjoy spices like cinnamon, nutmeg, and cloves',
+                         validators=[DataRequired(), NumberRange(0, 10)])
+    hoppy = DecimalField('I enjoy citrus fruit aromas and flavors like lemon, orange and grapefruit',
+                         validators=[DataRequired(), NumberRange(0, 10)])
+    malty = DecimalField('I enjoy buttery and bready flavors like biscuits or toast',
+                         validators=[DataRequired(), NumberRange(0, 10)])
+    roasty = DecimalField('I enjoy the roasty flavors of  coffee, barely or  genmai tea',
+                          validators=[DataRequired(), NumberRange(0, 10)])
+    smoke = DecimalField('I enjoy smokey flavors like honey, milk, chocolate, or fruit juice',
+                         validators=[DataRequired(), NumberRange(0, 10)])
+    sour = DecimalField('I enjoy sour or acidic tastes such as lemonade or kombucha',
+                        validators=[DataRequired(), NumberRange(0, 10)])
+    spice = DecimalField('I enjoy spices like cinnamon, nutmeg, and cloves',
+                         validators=[DataRequired(), NumberRange(0, 10)])
+    sweet = DecimalField('I enjoy sweet flavors like honey, milk, chocolate or fruit juice',
+                         validators=[DataRequired(), NumberRange(0, 10)])
+    wood = DecimalField('I enjoy woody flavors like you would get aged whiskey or wine',
+                        validators=[DataRequired(), NumberRange(0, 10)])

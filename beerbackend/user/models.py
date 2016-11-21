@@ -72,16 +72,16 @@ class User(UserMixin, SurrogatePK, Model):
     def update_taste_profile(self, malty=5, sour=5, wood=5, hoppy=5, spice=5,
                              fruit=5, sweet=5, roasty=5, bitter=5, smoke=5):
         taste={
-            "malty": malty,
-            "sour": sour,
-            "wood": wood,
-            "hoppy": hoppy,
-            "bitter": bitter,
-            "spice": spice,
-            "fruit": fruit,
-            "smoke": smoke,
-            "sweet": sweet,
-            "roasty": roasty,
+            "malty": float(malty),
+            "sour": float(sour),
+            "wood": float(wood),
+            "hoppy": float(hoppy),
+            "bitter": float(bitter),
+            "spice": float(spice),
+            "fruit": float(fruit),
+            "smoke": float(smoke),
+            "sweet": float(sweet),
+            "roasty": float(roasty),
         }
         self.update(taste_profile=json.dumps(taste))
 

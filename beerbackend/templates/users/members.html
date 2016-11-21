@@ -2,7 +2,8 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Welcome, {{ user.username }}</h1>
-    <h3>You can view your beer preferences here</h3>
+    <h3>You can view your beer preferences here, or <a href="{{ url_for('user.questions') }}">Modify Taste
+    Profile</a></h3>
     <div id="chart"></div>
     <canvas id="myChart"></canvas>
     <div>
