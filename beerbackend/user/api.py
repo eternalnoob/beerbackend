@@ -142,7 +142,8 @@ class Recommend(Resource):
         user = User.verify_auth_token(args.access_token)
         if user:
             #lol for now
-            return PBR
+            beer = user.reccommend()
+            return beer.to_data()
         else:
             return None, 401
 

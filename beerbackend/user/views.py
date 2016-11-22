@@ -38,11 +38,14 @@ def questions():
             flash_errors(form)
     return render_template('users/questionnaire.html', taste_profile=current_user.get_taste_profile(), form=form)
 
-@blueprint.route('/recommend')
+@blueprint.route('/recommend', methods=['GET','POST'])
 @login_required
 def recommend():
-    profile = current_user.get_profile()
-    profile_values = [(value, key) for key, value in profile.items()]
-    profile_values.sort()
-    top = profile_values[len(profile_values)-3: len(profile_values)]
-    return top
+    #profile = current_user.get_profile()
+    #profile_values = [(value, key) for key, value in profile.items()]
+    #profile_values.sort()
+    #top = profile_values[len(profile_values)-3: len(profile_values)]
+    beer = current_user.reccommend()
+    #redirect or some other crap look up above return redirect(url_for('beer.all')+str(current_user.recommend()))
+    return redirect(url_for('beer.all')+str(beer.id))
+    #return "O hai"
