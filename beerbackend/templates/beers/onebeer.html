@@ -10,13 +10,13 @@
         .color) }}"></div>
         <span class="col-xs-3">ABV: {{ truncatenum(beer.abv) }}%</span>
     </div>
-        <div class="row">
+        <div class="row ">
             {% if rating %}
             <span class="col-xs-4">Rated On: {{ rating.created_at }}</span>
             <div class="col-xs-4">User Rating: {{ rating.rating }}</div>
             {% endif %}
             {% if form %}
-                <div class="col-xs-6">
+                <div class="col-xs-4">
                     <form id="ratingForm" class="form form-rating" method="POST" action="" roler="form">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <div class="form-group">

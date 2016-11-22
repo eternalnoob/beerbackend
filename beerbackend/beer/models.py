@@ -57,6 +57,20 @@ class Beer(SurrogatePK, Model):
         """What makes a beer a beer, I say?"""
         return '<Beer({beer_name!r})>'.format(beer_name=self.beer_name)
 
+    def get_rating(self):
+        count = 0
+        sum = 0
+        for rating in self.ratings:
+            sum += rating.rating
+            count += 1
+        if count != 0:
+            return sum/count
+        else:
+            return 3
+    def total_ratings(self):
+        return len(['' for _ in self.ratings])
+
+
     def to_data(self):
         return {
             "name": self.beer_name,
@@ -73,6 +87,8 @@ class Beer(SurrogatePK, Model):
             "sweet": self.sweet.normalize(),
             "wood": self.wood.normalize(),
             "id": self.id,
+            "average": self.get_rating(),
+            "total_ratings": self.total_ratings(),
             "family": families.get(self.family, None)
         }
 

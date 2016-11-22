@@ -151,6 +151,13 @@ class User(UserMixin, SurrogatePK, Model):
             return json.loads(self.taste_profile)
         else:
             return {}
+    """
+    def recommend(self):
+        userbeers = set([rating.beer for rating in self.ratings])
+        beers = Beer.query.filter(Beer not in userbeers)
+
+        return beers
+    """
 
 
 
@@ -181,3 +188,5 @@ class Rating(SurrogatePK, Model):
         return '<Rating({rating!r}, {beer!r} {user!r})>'.format(rating=self.rating,
                                                                 beer=self.beer_id,
                                                                 user=self.user_id)
+    def update_time(self, **kwargs):
+        return self.update(created_at=dt.datetime.utcnow(), **kwargs)

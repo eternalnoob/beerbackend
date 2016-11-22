@@ -20,7 +20,7 @@
         </tr>
     {% for beer in beers %}
         <tr>
-            <td><a href="{{ url_for('beer.all')+str(beer.id) }}">{{beer.beer_name}}</a></td>
+            <td><a href="{{ url_for('beer.getbeer', beer_id=beer.id)}}">{{beer.beer_name}}</a></td>
             <td>{{ truncatenum(beer.abv) }}</td>
             <td>{{ truncatenum(beer.bitter) }}</td>
             <td>{{ truncatenum(beer.color) }}</td>

@@ -76,7 +76,7 @@ def getbeer(beer_id):
         if request.method == 'POST':
             if form.validate_on_submit():
                 if rating:
-                    rating.update(rating=form.rating.data)
+                    rating.update_time(rating=form.rating.data)
                 else:
                     rating = Rating.create(rating=form.rating.data, beer_id=beer_id,
                                   user_id=current_user.id)

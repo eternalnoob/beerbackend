@@ -1,6 +1,7 @@
 from beerbackend.user.models import User, Rating
 from beerbackend.beer.models import Beer
 from flask_restful import Resource, reqparse
+from datetime import datetime
 
 def grab_matching_ratings(user, fn):
     if user:
@@ -246,7 +247,8 @@ class RateApi(Resource):
         if user:
             rating = Rating.query.filter(Rating.user_id == user.id, Rating.beer_id == beer_id).first()
             if rating:
-                rating = rating.update(beer_id=beer_id, user_id=user.id, rating=rating_val)
+                rating = rating.update_time(beer_id=beer_id, user_id=user.id, rating=rating_val,
+                                        created_at=datetime.utcnow())
             else:
                 rating = Rating.create(beer_id=beer_id, user_id=user.id, rating=rating_val)
             return rating.id, 201
