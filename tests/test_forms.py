@@ -3,6 +3,8 @@
 
 from beerbackend.public.forms import LoginForm
 from beerbackend.user.forms import RegisterForm
+from beerbackend.user.forms import RateForm
+from beerbackend.user.forms import QuestionForm
 
 
 class TestRegisterForm:
@@ -66,3 +68,5 @@ class TestLoginForm:
         form = LoginForm(username=user.username, password='example')
         assert form.validate() is False
         assert 'User not activated' in form.username.errors
+
+

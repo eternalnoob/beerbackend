@@ -65,3 +65,11 @@ class TestUser:
         user.roles.append(role)
         user.save()
         assert role in user.roles
+
+    def test_user_token_auth(self):
+        user = User.create(username='test', email='foo@bar.com',
+                           password='bingbangboom')
+        auth_token = user.generate_auth_token()
+        invalid_token = ""
+        assert User.verify_auth_token(invalid_token) is None
+        assert User.verify_auth_token(auth_token) is user

@@ -50,3 +50,5 @@ dev.db
 node_modules/
 .idea/
 *.env
+
+.cache

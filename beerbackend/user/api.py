@@ -14,15 +14,11 @@ def grab_matching_ratings(user, fn):
         return None, 401
 
 def make_beers_arr(ratings):
-    print("huh")
     ratings_arr=[]
-    beer_ids = [rating.beer_id for rating in ratings]
-    ratings = [rating.rating for rating in ratings]
-    beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
-    for rating, beer in zip(ratings,beers):
-        data = beer.to_data()
+    for rating in ratings:
+        data = rating.beer.to_data()
         beerdict = {"beer": data,
-                    "rating": rating}
+                    "rating": rating.rating}
         ratings_arr.append(beerdict)
 
     return {"beers": ratings_arr,
@@ -125,15 +121,17 @@ class UserBeers(Resource):
 
 class LikedBeers(Resource):
     def get(self):
-        args= recommend_get_parse.parse_args()
+        args = recommend_get_parse.parse_args()
         user = User.verify_auth_token(args.access_token)
-        return grab_matching_ratings(user, lambda x: x >= 3)
+        x = grab_matching_ratings(user, lambda x: x >= 3)
+        return {'beers': x, 'total': len(x)}
 
 class DislikedBeers(Resource):
     def get(self):
-        args= recommend_get_parse.parse_args()
+        args = recommend_get_parse.parse_args()
         user = User.verify_auth_token(args.access_token)
-        return grab_matching_ratings(user, lambda x: x < 3)
+        x = grab_matching_ratings(user, lambda x: x < 3)
+        return {'beers': x, 'total': len(x)}
 
 
 class Recommend(Resource):
