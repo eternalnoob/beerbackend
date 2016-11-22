@@ -141,7 +141,12 @@ class Recommend(Resource):
         user = User.verify_auth_token(args.access_token)
         if user:
             #lol for now
-            return PBR
+            profile = User.get_profile()
+            profile_values = [(value, key) for key, value in profile.items()]
+            profile_values.sort()
+            top = profile[len(profile)-3: len(profile)]
+
+            return 
         else:
             return None, 401
 

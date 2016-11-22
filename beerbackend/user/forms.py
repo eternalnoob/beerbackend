@@ -47,7 +47,7 @@ class RateForm(Form):
 class QuestionForm(Form):
     bitter = DecimalField('I enjoy the bitterness of certain foods and drinks like coffee, dark chocolate, grapefruit or kale',
                           validators=[DataRequired(), NumberRange(0, 10)])
-    fruit = DecimalField('I enjoy spices like cinnamon, nutmeg, and cloves',
+    fruit = DecimalField('I enjoy fruit aroma and flavors like bananas, apples and pears ',
                          validators=[DataRequired(), NumberRange(0, 10)])
     hoppy = DecimalField('I enjoy citrus fruit aromas and flavors like lemon, orange and grapefruit',
                          validators=[DataRequired(), NumberRange(0, 10)])
@@ -55,7 +55,7 @@ class QuestionForm(Form):
                          validators=[DataRequired(), NumberRange(0, 10)])
     roasty = DecimalField('I enjoy the roasty flavors of  coffee, barely or  genmai tea',
                           validators=[DataRequired(), NumberRange(0, 10)])
-    smoke = DecimalField('I enjoy smokey flavors like honey, milk, chocolate, or fruit juice',
+    smoke = DecimalField('I enjoy smokey flavors like smoked mozzarella or BBQ',
                          validators=[DataRequired(), NumberRange(0, 10)])
     sour = DecimalField('I enjoy sour or acidic tastes such as lemonade or kombucha',
                         validators=[DataRequired(), NumberRange(0, 10)])

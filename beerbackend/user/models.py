@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """User models."""
 import datetime as dt
+import random
 
 from flask_login import UserMixin
 from beerbackend.database import Column, Model, SurrogatePK, db, reference_col, relationship
@@ -151,6 +152,41 @@ class User(UserMixin, SurrogatePK, Model):
             return json.loads(self.taste_profile)
         else:
             return {}
+
+    def reccommend(self):
+        #userbeers = set() get a list of all rated beers and then filter them out
+        tastes = self.get_taste_profile()
+        tastes = [(value, key) for key, value in tastes.items()]
+        tastes.sort()
+        tastes = tastes[len(tastes)-3: len(tastes)]
+        
+        ratedbeers = [rating.beer.beer_name for rating in self.ratings]
+        beer = Beer.query.all() #gives me all the beers
+        beers = [ x for x in beer if x.beer_name not in ratedbeers]
+        
+        counter = 0
+        selected_beers = []
+        while counter < 3 :
+            if counter == 0 :
+                distance = 0.5
+            elif counter == 1 :
+                distance = 2
+            else:
+                distance = 3
+
+            for beer in beers:
+                if abs(float(getattr(beer, tastes[0][1])) - tastes[0][0]) <= distance and abs(float(getattr(beer, tastes[1][1])) - tastes[1][0]) <= distance and abs(float(getattr(beer, tastes[2][1])) - tastes[2][0]) <= distance:
+                    selected_beers.append(beer)
+    
+            if len(selected_beers) >= 5:
+                counter = 3
+            else:    
+                counter += 1
+
+        print(selected_beers)
+        recommendation = random.choice(selected_beers)
+        print(recommendation.id)
+        return recommendation.id
 
 
 
