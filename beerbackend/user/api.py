@@ -189,7 +189,9 @@ class TasteProfile(Resource):
         if user:
             user.update_taste_profile(malty=args.malty, sour=args.sour, wood=args.wood,
                                       spice=args.spice, fruit=args.fruit, sweet=args.sweet,
-                                      roasty=args.roasty, bitter=args.bitter, smoke=args.smoke)
+                                      roasty=args.roasty, bitter=args.bitter, smoke=args.smoke,
+                                      hoppy=args.hoppy)
+            print(args.hoppy)
             return user.get_taste_profile(), 201
         else:
             return None, 400

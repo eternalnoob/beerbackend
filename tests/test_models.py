@@ -4,7 +4,8 @@ import datetime as dt
 
 import pytest
 
-from beerbackend.user.models import Role, User
+from beerbackend.user.models import Role, User, Rating
+from beerbackend.beer.models import Beer
 
 from .factories import UserFactory
 
@@ -73,3 +74,40 @@ class TestUser:
         invalid_token = ""
         assert User.verify_auth_token(invalid_token) is None
         assert User.verify_auth_token(auth_token) is user
+
+    def test_recommend_returns(self):
+        user = User.create(username='test', email='lol@lol.com',
+                password='wedon\'tcare')
+        beer = Beer.create(beer_name='testbeer', abv=2.3,bitter=2.3, color=4, fruit=5, hoppy=4, malty=3, roasty=2,
+                           smoke=1, sour=3, spice=4.5, family=1, sweet=2, wood=3)
+        beer_rec = user.reccommend()
+        assert beer_rec == beer
+
+    def test_recommend_returns_closest(self):
+        user = User.create(username='test', email='lol@lol.com',
+                           password='wedon\'tcare')
+        beer = Beer.create(beer_name='testbeer', abv=2.3,bitter=2.3, color=4, fruit=3, hoppy=4, malty=3, roasty=2,
+                           smoke=1, sour=3, spice=4.5, family=1, sweet=2, wood=3)
+
+        beer1 = Beer.create(beer_name='testbeer1', abv=5.3, bitter=6, color=3, fruit=7, hoppy=8, malty=3, roasty=2,
+                           smoke=1, sour=3, spice=4.5, family=1, sweet=2, wood=3)
+
+        user.update_taste_profile(malty=0, bitter=7, fruit=6.5, hoppy=7, wood=2, sweet=3,
+                                  spice=1.4, sour=3.4, smoke=4, roasty=3)
+        assert user.reccommend() is beer1
+        assert user.reccommend() is not beer
+
+    def test_rating_beer(self):
+        user = User.create(username='test', email='lol@lol.com',
+                           password='wedon\'tcare')
+        beer = Beer.create(beer_name='testbeer', abv=2.3,bitter=2.3, color=4, fruit=3, hoppy=4, malty=3, roasty=2,
+                           smoke=1, sour=3, spice=4.5, family=1, sweet=2, wood=3)
+        Rating.create(user_id = user.id, beer_id = beer.id, rating = 4)
+        assert [x for x in user.ratings] is not []
+        assert [x for x in user.ratings][0].rating is 4
+
+
+
+
+
+

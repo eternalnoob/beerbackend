@@ -84,6 +84,7 @@ class User(UserMixin, SurrogatePK, Model):
             "sweet": float(sweet),
             "roasty": float(roasty),
         }
+        print(taste)
         self.update(taste_profile=json.dumps(taste))
 
     @staticmethod
@@ -148,7 +149,18 @@ class User(UserMixin, SurrogatePK, Model):
         if self.taste_profile:
             return json.loads(self.taste_profile)
         else:
-            return {}
+            return {
+            "sour": 5,
+            "malty": 5,
+            "hoppy": 5,
+            "wood": 5,
+            "bitter": 5,
+            "roasty": 5,
+            "spice": 5,
+            "sweet": 5,
+            "fruit": 5,
+            "smoke": 5,
+        }
 
     def reccommend(self):
         #userbeers = set() get a list of all rated beers and then filter them out
@@ -172,6 +184,7 @@ class User(UserMixin, SurrogatePK, Model):
                 distance = 3
 
             for beer in beers:
+                print(tastes)
                 if abs(float(getattr(beer, tastes[0][1])) - tastes[0][0]) <= distance \
                         and abs(float(getattr(beer, tastes[1][1])) - tastes[1][0]) <= distance \
                         and abs(float(getattr(beer, tastes[2][1])) - tastes[2][0]) <= distance:
