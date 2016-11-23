@@ -116,31 +116,28 @@ class User(UserMixin, SurrogatePK, Model):
             "smoke": 0,
         }
         final_map=PBR
-        beer_ids = [rating.beer_id for rating in self.ratings if rating.rating != 3]
-        if beer_ids:
-            beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
+        beers = [rating for rating in self.ratings if rating.rating != 3]
+        if len(beers) > 0:
             print(beers)
-            print(beer_ids)
-            beers_dict = {beer.id: {"data": beer.to_data()} for beer in beers}
-            for rating in self.ratings:
-                beers_dict[rating.beer_id]["rating"] = rating.rating
-            print(beers_dict)
             vals_arr = list(PBR.keys())
             total_weight = 0
-            for beer in beers_dict.values():
-                rating_offset = 3 - beer['rating']
+            for rating in beers:
+                rating_offset = 3 - rating.rating
                 total_weight += abs(rating_offset)
                 for key in vals_arr:
+                    taste_weight = rating_offset*(rating.beer.to_data()[key]-5)
                     print(key)
-                    print(beer['data'][key])
-                    taste_weight = rating_offset*(beer['data'][key]-5)
+                    print(taste_weight)
                     PBR[key] += taste_weight
 
             if taste_profile:
-                final_map = {key: Decimal(((5-(val/total_weight))+Decimal(taste_profile[key]))/2).normalize() for key,
+                print(PBR)
+                print(taste_profile)
+                final_map = {key: Decimal(Decimal((5-(val/total_weight))+Decimal(taste_profile[key]))/2) for key,
                                                                                                  val in PBR.items()}
             else:
-                final_map = {key: Decimal(5-(val/total_weight)).normalize() for key, val in PBR.items()}
+                print(PBR)
+                final_map = {key: Decimal(5-(val/total_weight)) for key, val in PBR.items()}
         else:
             if taste_profile:
                 final_map = taste_profile
