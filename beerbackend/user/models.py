@@ -116,7 +116,7 @@ class User(UserMixin, SurrogatePK, Model):
             "smoke": 0,
         }
         final_map=PBR
-        beer_ids = [rating.beer_id for rating in self.ratings]
+        beer_ids = [rating.beer_id for rating in self.ratings if rating.rating != 3]
         if beer_ids:
             beers = Beer.query.filter(Beer.id.in_(beer_ids)).all()
             print(beers)
