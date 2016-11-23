@@ -187,11 +187,13 @@ class TasteProfile(Resource):
         args = profile_set_parser.parse_args()
         user = User.verify_auth_token(args.access_token)
         if user:
+            print(args)
+            print(user.taste_profile)
             user.update_taste_profile(malty=args.malty, sour=args.sour, wood=args.wood,
                                       spice=args.spice, fruit=args.fruit, sweet=args.sweet,
                                       roasty=args.roasty, bitter=args.bitter, smoke=args.smoke,
                                       hoppy=args.hoppy)
-            print(args.hoppy)
+            print(user.taste_profile)
             return user.get_taste_profile(), 201
         else:
             return None, 400
@@ -248,8 +250,7 @@ class RateApi(Resource):
         if user:
             rating = Rating.query.filter(Rating.user_id == user.id, Rating.beer_id == beer_id).first()
             if rating:
-                rating = rating.update_time(beer_id=beer_id, user_id=user.id, rating=rating_val,
-                                        created_at=datetime.utcnow())
+                rating = rating.update_time(beer_id=beer_id, user_id=user.id, rating=rating_val)
             else:
                 rating = Rating.create(beer_id=beer_id, user_id=user.id, rating=rating_val)
             return rating.id, 201
